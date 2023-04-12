@@ -18,8 +18,7 @@ module.exports = {
       const slots = await InterviewModel.find(
         {
           date: {
-            $gte: new Date().setHours(00, 00, 00),
-            // $lt: new Date().setHours(23, 59, 59),
+            $gte: new Date().setHours(00, 00, 00)
           },
         },
         'date startTime endTime'
