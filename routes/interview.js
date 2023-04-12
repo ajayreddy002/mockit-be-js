@@ -1,5 +1,5 @@
 const express = require("express");
-const { schedule } = require("../controllers/interviews/interview-controller");
+const { schedule, getAllMeetingSolts } = require("../controllers/interviews/interview-controller");
 const verifyToken = require("../middleware/auth");
 const {
   interviewScheduleSchema,
@@ -13,4 +13,5 @@ router.post(
   validate(interviewScheduleSchema),
   schedule
 );
+router.get('/get-slots', verifyToken, getAllMeetingSolts)
 module.exports = router;
