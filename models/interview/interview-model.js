@@ -20,7 +20,7 @@ const interviewModel = mongoose.Schema({
     required: true,
   },
   userId: String,
-  status: { type: String, default: "New" },
+  status: { type: String, default: "new" },
   meetingId: {
     type: String,
     required: true
@@ -31,6 +31,9 @@ const interviewModel = mongoose.Schema({
   },
   isHost: {
     type: Boolean
+  },
+  selectedPlan: {
+    type: String
   }
 });
 const InterviewModel = mongoose.model("interviews", interviewModel);
