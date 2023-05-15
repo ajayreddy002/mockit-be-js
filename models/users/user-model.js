@@ -20,9 +20,11 @@ const userSchema = new mongoose.default.Schema({
     unique: true
   },
   userRole: {
-    type: Boolean,
+    type: String,
     default: 'user'
-  }
+  },
+  crDt: Date,
+	upDt: Date,
 });
 const UserSchema = mongoose.model('users',userSchema);
 module.exports = {

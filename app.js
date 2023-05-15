@@ -11,6 +11,7 @@ const http = require('http');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const interviewRouter = require('./routes/interview');
+const interviewerRouter = require('./routes/interviewer');
 const { joinRoom } = require('./socket/socket-actions');
 dotenv.config();
 mongoose.connect(process.env.MONGO_DB_URL, { dbName: 'mockit-db' });
@@ -53,6 +54,7 @@ io.on('connection', (socket) => {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/interview', interviewRouter);
+app.use('/interviewer', interviewerRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { user } = require("../models/users/user-model");
+const { user } = require("../../models/users/user-model");
 module.exports = {
   create: async (req, res) => {
     try {
@@ -11,13 +11,13 @@ module.exports = {
       if (err && err.code === 11000) {
         res
           .status(500)
-          .send({ status: "Error", message: "Email already registered." });
+          .send({ status: "Error", message: "User already registered." });
       }
     }
   },
   login: async (req, res) => {
     try {
-      const loggedInUser = await user.find(
+      const loggedInUser = await user.findOne(
         { email: req.body.email, password: req.body.password },
         "name email phoneNumber userRole"
       );
@@ -36,4 +36,16 @@ module.exports = {
       });
     }
   },
+  changePassword: async (req, res) => {
+    try {
+      await user.findByIdAndUpdate(req.params.id, { password: req.body.password });
+      res
+        .status(200)
+        .send({ status: "Success", message: "Password updated successfully" });
+    } catch (err) {
+      res
+        .status(500)
+        .send({ status: "Error", message: "User not found" });
+    }
+  }
 };
