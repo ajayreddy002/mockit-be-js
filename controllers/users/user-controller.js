@@ -3,30 +3,10 @@ const { user } = require("../../models/users/user-model");
 module.exports = {
   create: async (req, res) => {
     try {
-      if (req.body.userRole === 'admin') {
-        try {
-          const userDetails = await user.findOne(
-            { email: req.body.email, userRole: req.body.userRole },
-            "name"
-          );
-          if (userDetails._id) {
-            res.status(400).send({
-              status: "Error",
-              message: "Invalid request",
-            });
-          } else {
-            await user.create(req.body);
-            res
-              .status(200)
-              .send({ status: "Success", message: "Successfully registered." });
-          }
-        } catch (error) {
-          console.log(error)
-          res
-            .status(500)
-            .send({ status: "Error", message: "Something went wrong" });
-        }
-
+      if (req.body.userRole.toLowerCase() === 'admin') {
+        res
+          .status(400)
+          .send({ status: "Error", message: "Not allowed" });
       } else {
         await user.create(req.body);
         res

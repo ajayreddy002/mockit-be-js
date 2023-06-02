@@ -8,5 +8,5 @@ module.exports = {
             },
             'date startTime endTime'
         );
-    }
+    },
 }

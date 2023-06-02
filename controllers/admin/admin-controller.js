@@ -1,6 +1,7 @@
 const { interviewerProfile } = require("../../models/interviewers/interviewer-model");
 const { user } = require("../../models/users/user-model");
-const { getAllInterviews } = require("../../services/interview-service")
+const { getAllInterviews } = require("../../services/interview-service");
+const { getAllUsers } = require("../../services/user-service");
 
 module.exports = {
     getAllLatestInterviews: async (req, res) => {
@@ -13,14 +14,14 @@ module.exports = {
                 .send({ status: 'Error', message: `${error} Something went wrong.` });
         }
     },
-    getAllUsers: async (req, res) => {
+    getUsers: async (req, res) => {
         try {
-            const users = await user.find({}, '-password')
-            console.log(users);
+            res.status(200).send({users: await getAllUsers(req)})
         } catch (err) {
+            console.log(err)
             res
                 .status(500)
-                .send({ status: 'Error', message: `${error} Something went wrong.` });
+                .send({ status: 'Error', message: `${err} Something went wrong.` });
         }
     },
     getInterviewers: async () => {

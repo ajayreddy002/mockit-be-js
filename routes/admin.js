@@ -1,6 +1,6 @@
 const express = require('express');
-const { getAllUsers } = require('../controllers/admin/admin-controller');
-const verifyIsAdmin = require('../middleware/admin-auth');
+const { getUsers } = require('../controllers/admin/admin-controller');
+const authMiddleWare = require('../middleware/admin-auth');
 const router = express.Router();
-router.get('/users-list', verifyIsAdmin,getAllUsers);
+router.get('/users-list', authMiddleWare,getUsers);
 module.exports = router;

@@ -3,25 +3,26 @@ const { user } = require("../models/users/user-model");
 
 const config = process.env;
 
-const verifyIsAdmin = (req, res, next) => {
-  const token = req.headers["x-access-token"] || req.headers["token"];
+const authMiddleWare = async (req, res, next) => {
+    try {
+        const token = req.headers["x-access-token"] || req.headers["token"];
+        if (!token) {
+            return res.status(401).send({
+                message: 'Not authorized to do this action'
+            });
+        }
+        const data = jwt.verify(token, config.TOKEN_KEY);
+        const userDetails = await user.findOne({ email: data.email });
+        console.log(userDetails)
+        if (!userDetails || userDetails.userRole !== 'admin') {
+            return res.status(401).send({
+                message: 'Not authorized to do this action'
+            });
+        }
 
-  if (!token) {
-    return res.status(403).send("Not authorized to access");
-  }
-  try {
-    const decoded = jwt.verify(token, config.TOKEN_KEY);
-    req.user = decoded;
-    const userDetails = user.findOne({_id: decoded.id}, "name userRole")
-    if(userDetails.userRole === decoded.role){
-      next();
-    } else {
-      return res.status(403).send("Not authorized to access");
+        next();
+    } catch (error) {
+        return res.status(500).json({ message: `${JSON.stringify(error)}` });
     }
-  } catch (err) {
-    return res.status(401).send("Invalid Token");
-  }
-  return next();
-};
-
-module.exports = verifyIsAdmin;
+}
+module.exports = authMiddleWare;

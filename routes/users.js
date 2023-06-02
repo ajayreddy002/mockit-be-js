@@ -13,4 +13,5 @@ router.get("/", function (req, res, next) {
 router.post("/create", validate(registrationSchema), create);
 router.put("/change-password/:id", changePassword);
 router.post("/login", validate(loginSchema), login);
+// router.get("/userById/:id", usrerDetailsById);
 module.exports = router;
