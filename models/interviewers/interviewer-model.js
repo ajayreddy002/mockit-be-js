@@ -56,7 +56,9 @@ const InterviewerProfile = mongoose.Schema({
 	iterviewType: {
 		type: String,
 		required: true
-	}
+	},
+	crDt: Date,
+	upDt: Date,
 });
 const InterviewerSlots = mongoose.Schema({
 	date: {
@@ -82,8 +84,8 @@ const InterviewerSlots = mongoose.Schema({
 	crDt: Date,
 	upDt: Date,
 });
-const interviewerSlots = mongoose.model('intervieweSlots', InterviewerSlots);
-const interviewerProfile = mongoose.model('intervieweProfile', InterviewerProfile);
+const interviewerSlots = mongoose.model('interviewerSlots', InterviewerSlots);
+const interviewerProfile = mongoose.model('interviewerProfile', InterviewerProfile);
 module.exports = {
 	interviewerSlots,
 	interviewerProfile

@@ -1,4 +1,5 @@
 const { InterviewModel } = require('../../models/interview/interview-model');
+const { getAllInterviews } = require('../../services/interview-service');
 
 module.exports = {
   schedule: async (req, res) => {
@@ -15,14 +16,7 @@ module.exports = {
   },
   getAllMeetingSolts: async (req, res) => {
     try {
-      const slots = await InterviewModel.find(
-        {
-          date: {
-            $gte: new Date().setHours(00, 00, 00),
-          },
-        },
-        'date startTime endTime'
-      );
+      const slots = await getAllInterviews()
       res.status(200).send({ status: 'Success', slots: slots });
     } catch (error) {
       res

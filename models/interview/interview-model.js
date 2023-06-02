@@ -34,7 +34,9 @@ const interviewModel = mongoose.Schema({
   },
   selectedPlan: {
     type: String
-  }
+  },
+  crDt: Date,
+	upDt: Date,
 });
 const InterviewModel = mongoose.model("interviews", interviewModel);
 module.exports = {
