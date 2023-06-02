@@ -13,18 +13,12 @@ var usersRouter = require('./routes/users');
 const interviewRouter = require('./routes/interview');
 const interviewerRouter = require('./routes/interviewer');
 const adminRouter = require('./routes/admin');
-const { joinRoom } = require('./socket/socket-actions');
 dotenv.config();
 mongoose.connect(process.env.MONGO_DB_URL, { dbName: 'mockit-db' });
 const db = mongoose.connection;
 var app = express();
 app.use(cors());
 const server = http.Server(app);
-const io = require('socket.io')(server, {
-  cors: {
-    origin: '*',
-  },
-});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,18 +32,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 db.on('error', console.error.bind(console, 'connection error: '));
 db.once('open', () => {
   console.log('Connected successfully');
-});
-io.on('connection', (socket) => {
-  console.log('connected socket successfully');
-  socket.emit('connection-check', socket.id);
-  socket.on('joinRoom', (roomId, userId) => {
-    console.log(roomId, userId)
-    socket.join(roomId);
-    socket.to(roomId).broadcast.emit('user-connected', userId)
-  });
-  socket.on('disconnect', (userId) => {
-    socket.broadcast.emit('user-disconnected', userId);
-  });
 });
 
 app.use('/', indexRouter);
