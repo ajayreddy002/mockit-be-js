@@ -26,6 +26,14 @@ const plans = mongoose.Schema({
     image: {
         type: String
     },
+    priceId: {
+        type: String,
+        required: true
+    },
+    price: {
+        type: Number,
+        required: true
+    },
     crDt: Date,
 	upDt: Date,
 })

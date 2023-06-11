@@ -13,6 +13,7 @@ var usersRouter = require('./routes/users');
 const interviewRouter = require('./routes/interview');
 const interviewerRouter = require('./routes/interviewer');
 const adminRouter = require('./routes/admin');
+const commonRouter = require('./routes/common');
 dotenv.config();
 mongoose.connect(process.env.MONGO_DB_URL, { dbName: 'mockit-db' });
 const db = mongoose.connection;
@@ -39,6 +40,7 @@ app.use('/users', usersRouter);
 app.use('/interview', interviewRouter);
 app.use('/interviewer', interviewerRouter);
 app.use('/admin', adminRouter);
+app.use('/common', commonRouter);
 
 
 // catch 404 and forward to error handler

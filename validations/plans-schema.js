@@ -7,6 +7,7 @@ const plansSchema = yup.object({
         objective: yup.boolean().required('Objective is required'),
         programming: yup.boolean().required('Programming is required'),
         skills: yup.array().required('skills are required'),
+        price: yup.number('Please enter number').required('Duration is required')
     })
 })
 module.exports = { plansSchema }
