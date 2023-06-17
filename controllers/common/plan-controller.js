@@ -4,7 +4,6 @@ module.exports = {
     createPlan: async (req, res) => {
         try {
             const planData = await PlansModel.find({ title: req.body.title });
-            console.log(planData)
             if (planData.length > 0) {
                 return res.status(400).send({ message: 'Plan is already added' })
             }
@@ -21,8 +20,15 @@ module.exports = {
             if (insertedPlan) {
                 res.status(200).send({ message: 'Plan added successfully' })
             }
-        } catch (error) {
-            res.status(500).send({ message: 'Something went wrong' })
+        } catch (err) {
+            console.log(err, 'errrr')
+            if (err && err.code === 11000) {
+                res
+                    .status(500)
+                    .send({ status: "Error", message: "Plan already exists." });
+            } else {
+                res.status(500).send({ message: 'Something went wrong' })
+            }
         }
     },
     getPlans: async (req, res) => {
@@ -32,4 +38,34 @@ module.exports = {
             res.status(500).send({ message: 'Something went wrong' })
         }
     },
+    updatePlan: async (req, res) => {
+        try {
+            const updatedRes = await PlansModel.findByIdAndUpdate(req.params.id, req.body)
+            if (updatedRes) {
+                res.status(200).send({ message: 'Plan updated successfully' })
+            }
+        } catch (err) {
+            if (err && err.code === 11000) {
+                res
+                    .status(500)
+                    .send({ status: "Error", message: "Plan already exists." });
+            } else {
+                res.status(500).send({ message: 'Something went wrong' })
+            }
+        }
+    },
+    deletePlan: async (req, res) => {
+        try {
+            if (req.params.id) {
+                const deleteRes = await PlansModel.findByIdAndDelete(req.params.id);
+                if (deleteRes) {
+                    res.status(200).send({ message: 'Plan deleted successfully' });
+                } else {
+                    res.status(400).send({ message: 'Resource not exists' });
+                }
+            }
+        } catch (error) {
+            res.status(500).send({ message: 'Something went wrong' })
+        }
+    }
 }

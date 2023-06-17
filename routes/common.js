@@ -2,7 +2,10 @@ var express = require('express');
 var commonRouter = express.Router();
 const { validate } = require('../validations/validate');
 const { plansSchema } = require('../validations/plans-schema');
-const { getPlans, createPlan } = require('../controllers/common/plan-controller');
-commonRouter.post('/plan', validate(plansSchema), createPlan);
-commonRouter.get('/plan', getPlans)
+const { getPlans, createPlan, deletePlan, updatePlan } = require('../controllers/common/plan-controller');
+const authMiddleWare = require('../middleware/admin-auth');
+commonRouter.post('/plan', validate(plansSchema),authMiddleWare,createPlan);
+commonRouter.get('/plan', authMiddleWare,getPlans);
+commonRouter.delete('/plan/:id', authMiddleWare,deletePlan);
+commonRouter.put('/plan/:id', validate(plansSchema),authMiddleWare,updatePlan);
 module.exports = commonRouter;

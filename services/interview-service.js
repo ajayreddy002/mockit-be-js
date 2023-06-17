@@ -1,3 +1,5 @@
+const { InterviewModel } = require("../models/interview/interview-model");
+
 module.exports = {
     getAllInterviews: async () => {
         return await InterviewModel.find(
@@ -9,4 +11,7 @@ module.exports = {
             'date startTime endTime'
         );
     },
+    updateInterviewById: async (id, body) => {
+        return await InterviewModel.findByIdAndUpdate(id, body);
+    }
 }

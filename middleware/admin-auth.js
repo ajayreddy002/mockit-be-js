@@ -13,7 +13,6 @@ const authMiddleWare = async (req, res, next) => {
         }
         const data = jwt.verify(token, config.TOKEN_KEY);
         const userDetails = await user.findOne({ email: data.email });
-        console.log(userDetails)
         if (!userDetails || userDetails.userRole !== 'admin') {
             return res.status(401).send({
                 message: 'Not authorized to do this action'
