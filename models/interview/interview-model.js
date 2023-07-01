@@ -35,6 +35,10 @@ const interviewModel = mongoose.Schema({
   selectedPlan: {
     type: String
   },
+  paymentSessionId: {
+    type: String,
+    required: true
+  },
   crDt: Date,
 	upDt: Date,
 });

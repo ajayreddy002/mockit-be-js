@@ -15,7 +15,6 @@ const plans = mongoose.Schema({
     },
     objective: {
         type: Boolean,
-        required: true 
     },
     programming: {
         type: Boolean,

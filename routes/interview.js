@@ -3,6 +3,8 @@ const {
   schedule,
   getAllMeetingSolts,
   getInterviewsByUserIdAndStatus,
+  createPayment,
+  getPaymentSessionDetails,
 } = require('../controllers/interviews/interview-controller');
 const sendMail = require('../helpers/email-service');
 const verifyToken = require('../middleware/auth');
@@ -25,4 +27,6 @@ router.get(
   verifyToken,
   getInterviewsByUserIdAndStatus
 );
+router.post('/checkout', verifyToken, createPayment);
+router.get('/payment-status', verifyToken, getPaymentSessionDetails)
 module.exports = router;

@@ -1,6 +1,5 @@
 const { interviewerProfile } = require("../../models/interviewers/interviewer-model");
-const { user } = require("../../models/users/user-model");
-const { getAllInterviews, updateInterviewById } = require("../../services/interview-service");
+const { getAllInterviews, updateInterviewById, rescheduleInterview } = require("../../services/interview-service");
 const { getAllUsers } = require("../../services/user-service");
 
 module.exports = {
@@ -40,6 +39,25 @@ module.exports = {
                 const updateIRes = await updateInterviewById(req.params.id, req.body);
                 if (updateIRes) {
                     res.status(200).send({ status: 'Success', message: 'Updated successfully' })
+                }
+            } else {
+                res
+                    .status(400)
+                    .send({ status: 'Error', message: 'Bad request' });
+            }
+        } catch (err) {
+            res
+                .status(500)
+                .send({ status: 'Error', message: `${err} Something went wrong.` });
+        }
+    },
+    reschedule: async (req, res) => {
+        try {
+            const { date, startTime, endTime } = req.body
+            if (req.params.id) {
+                const updateIRes = await rescheduleInterview(req.params.id, { date, startTime, endTime });
+                if (updateIRes) {
+                    res.status(200).send({ status: 'Success', message: 'Rescheduled successfully' })
                 }
             } else {
                 res

@@ -18,7 +18,9 @@ dotenv.config();
 mongoose.connect(process.env.MONGO_DB_URL, { dbName: 'mockit-db' });
 const db = mongoose.connection;
 var app = express();
-app.use(cors());
+app.use(cors({
+  origin: '*'
+}));
 const server = http.Server(app);
 
 // view engine setup

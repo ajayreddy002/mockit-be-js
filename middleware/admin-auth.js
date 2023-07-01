@@ -21,7 +21,7 @@ const authMiddleWare = async (req, res, next) => {
 
         next();
     } catch (error) {
-        return res.status(500).json({ message: `${JSON.stringify(error)}` });
+        return res.status(401).json({ message: `${JSON.stringify(error)}` });
     }
 }
 module.exports = authMiddleWare;

@@ -1,19 +1,18 @@
 const nodeMailer = require('nodemailer');
 
 const sendMail = async (req, res, next) => {
-  let account = await nodeMailer.createTestAccount();
   const transporter = nodeMailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    secure: false,
+    host: 'smtpout.secureserver.net',
     auth: {
-      user: account?.user,
-      pass: account?.pass,
+      user: "info@mockitt.in",
+      pass: "Varcas@2021",
     },
+    port: 465,
+    logger: true // Enable logging
   });
   const mailOptions = {
-    from: 'info@varcasinfo.com',
-    to: 'ajaykumarreddy401@gmail.com',
+    from: 'info@mockitt.in',
+    to: 'varcasinfo@gmail.com',
     subject: 'Test email',
     text: 'This is a test email',
   };
