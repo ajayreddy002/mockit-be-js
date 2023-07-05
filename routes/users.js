@@ -1,9 +1,9 @@
 var express = require("express");
-const { create, login, changePassword } = require("../controllers/users/user-controller");
+const { create, login, changePassword, sendResetLink, verifyEmail } = require("../controllers/users/user-controller");
 const {
-  registrationSchema,loginSchema
+  registrationSchema, loginSchema
 } = require("../validations/user-registration-schema");
-const {validate} = require('../validations/validate');
+const { validate } = require('../validations/validate');
 const verifyToken = require("../middleware/auth");
 const { reschedule } = require("../controllers/admin/admin-controller");
 var router = express.Router();
@@ -15,6 +15,8 @@ router.get("/", function (req, res, next) {
 router.post("/create", validate(registrationSchema), create);
 router.put("/change-password/:id", changePassword);
 router.post("/login", validate(loginSchema), login);
-router.put('/reshedule', verifyToken, reschedule)
+router.put('/reshedule', verifyToken, reschedule);
+router.post('/send-pwd-link', sendResetLink);
+router.post('/verify-email', verifyEmail)
 // router.get("/userById/:id", usrerDetailsById);
 module.exports = router;

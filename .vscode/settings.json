@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/a4ac18c1-06a0-4877-80e9-700d96c34494/resourceGroups/dev/providers/Microsoft.Web/sites/mockitt-dev",
+    "appService.deploySubpath": "."
+}

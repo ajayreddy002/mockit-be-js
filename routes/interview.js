@@ -12,6 +12,7 @@ const {
   interviewScheduleSchema,
 } = require('../validations/interview-schedule-schema');
 const { validate } = require('../validations/validate');
+const { sendOtpToEmail } = require('../services/email-service');
 const router = express.Router();
 
 router.post(
@@ -21,7 +22,6 @@ router.post(
   schedule
 );
 router.get('/get-slots', verifyToken, getAllMeetingSolts);
-router.post('/send', sendMail);
 router.get(
   '/interviews/:id/:status',
   verifyToken,

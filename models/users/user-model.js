@@ -23,6 +23,14 @@ const userSchema = new mongoose.default.Schema({
     type: String,
     default: 'user'
   },
+  isEmailVerified: {
+    type: Boolean,
+    default: false
+  },
+  otp: {
+    type: Number,
+    required: true
+  },
   crDt: Date,
 	upDt: Date,
 });
