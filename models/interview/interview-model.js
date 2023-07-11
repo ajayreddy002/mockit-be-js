@@ -13,11 +13,11 @@ const interviewModel = mongoose.Schema({
     type: String,
     required: true,
   },
-  skills: Array,
   interviewer: String,
   resume: {
     type: String,
     required: true,
+    default: 'to be uploaded'
   },
   userId: String,
   status: { type: String, default: "new" },
@@ -30,7 +30,8 @@ const interviewModel = mongoose.Schema({
     required: true
   },
   isHost: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   selectedPlan: {
     type: String

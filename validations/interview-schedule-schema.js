@@ -7,8 +7,6 @@ const interviewScheduleSchema = yup.object({
       .required("This field is required"),
     startTime: yup.string().required("Please select start time"),
     endTime: yup.string().required("Please select end time"),
-    skills: yup.array(),
-    resume: yup.string().required("Please upload resume"),
     userId: yup.string().required("User id is required"),
     meetingId: yup.string().required("Meeting id is required"),
     participants: yup.array().min(1, "Atleaset one particpant is required"),

@@ -23,7 +23,7 @@ router.post(
 );
 router.get('/get-slots', verifyToken, getAllMeetingSolts);
 router.get(
-  '/interviews/:id/:status',
+  '/interviews/:id',
   verifyToken,
   getInterviewsByUserIdAndStatus
 );

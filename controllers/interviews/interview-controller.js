@@ -8,6 +8,7 @@ module.exports = {
   schedule: async (req, res) => {
     try {
       const { _id } = await InterviewModel.create(req.body);
+      console.log(_id);
       res
         .status(200)
         .send({ status: 'Success', message: 'Scheduled successfully' });
@@ -32,7 +33,7 @@ module.exports = {
       try {
         const interviews = await InterviewModel.find({
           userId: req.params.id,
-          status: req.params.status ? req.params.status : 'New',
+          // status: req.params.status ? req.params.status : 'New',
         }, "-meetingId -participants").sort({ date: 1 });
         res.status(200).send({ status: 'Success', interviews: interviews });
       } catch (error) {
@@ -50,12 +51,12 @@ module.exports = {
         line_items: [
           {
             // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-            price: 'price_1NJrmKSCOiDwHOh5wk4s3pL8',
+            price: req.body.priceId,
             quantity: 1,
           },
         ],
         mode: 'payment',
-        success_url: `${DOMAIN}?success=true`,
+        success_url: `${DOMAIN}?success=true&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${DOMAIN}?canceled=true`,
       });
       res.json(session.url);
@@ -65,11 +66,9 @@ module.exports = {
   },
   getPaymentSessionDetails: async (req, res) => {
     try {
-      console.log(process.env.STRIPE_KEY)
       const session = await stripe.checkout.sessions.retrieve(req.query.session_id)
       res.status(200).send({status: 'Success', data: session})
     } catch (error) {
-      console.log(error, 'key', process.env.STRIPE_KEY)
       res.status(500).send({ status: 'Error', message: 'Failed to get details' })
     }
   }

@@ -18,7 +18,12 @@ dotenv.config();
 mongoose.connect(process.env.MONGO_DB_URL, { dbName: 'mockit-db' });
 const db = mongoose.connection;
 var app = express();
-const allowedOrigins = ['http://localhist:4200']
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+ next();
+});
+const allowedOrigins = ['http://localhist:4200/']
 app.use(cors({
   origin: allowedOrigins
 }));
