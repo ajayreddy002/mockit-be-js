@@ -1,6 +1,6 @@
 const { default: mongoose } = require("mongoose");
 const plans = mongoose.Schema({
-    category: {
+    interviewType: {
         type: String,
         required: true
     },
@@ -9,23 +9,13 @@ const plans = mongoose.Schema({
         required: true,
         unique: true
     },
-    duration: {
-        type: Number,
+    description: {
+        type: String,
         required: true
-    },
-    objective: {
-        type: Boolean,
-    },
-    programming: {
-        type: Boolean,
-        required: true 
     },
     skills: [
         {type: String, required: true}
     ],
-    image: {
-        type: String
-    },
     priceId: {
         type: String,
         required: true
@@ -35,7 +25,7 @@ const plans = mongoose.Schema({
         required: true
     },
     crDt: Date,
-	upDt: Date,
+    upDt: Date,
 })
 const PlansModel = mongoose.model('plans', plans);
 module.exports = {

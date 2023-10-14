@@ -1,32 +1,25 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const InterviewerProfile = mongoose.Schema({
 	interviewerId: {
-		type: String,
+		type: Schema.Types.ObjectId,
 		required: true
 	},
 	personalDetails: {
 		firstName: {
 			type: String,
-			required: true
 		},
 		lastName: {
 			type: String
 		},
-		email: {
-			type: String,
-			required: true
-		},
 		phoneNum: {
 			type: String,
-			required: true
 		},
 		dob: {
 			type: String,
-			required: true
 		},
 		address: {
 			type: String,
-			required: true
 		},
 	},
 	eduQualifications: [
@@ -47,16 +40,16 @@ const InterviewerProfile = mongoose.Schema({
 	],
 	linkedInUrl: {
 		type: String,
-		required: true
 	},
 	resume: {
 		type: String,
-		required: true
 	},
-	iterviewType: {
+	profileType: {
 		type: String,
-		required: true
 	},
+	skills: [
+		{type: String}
+	],
 	crDt: Date,
 	upDt: Date,
 });

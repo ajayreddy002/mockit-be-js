@@ -3,12 +3,12 @@ const stripe = require('stripe')('sk_test_51NEa7bSCOiDwHOh503j1O3DcoQBh3iuFtKGBK
 module.exports = {
     createPlan: async (req, res) => {
         try {
-            const planData = await PlansModel.find({ title: req.body.title });
+            const planData = await PlansModel.find({ interviewType: req.body.interviewType });
             if (planData.length > 0) {
-                return res.status(400).send({ message: 'Plan is already added' })
+                return res.status(400).send({ message: 'Plan already exists' })
             }
             const product = await stripe.products.create({
-                name: req.body.title,
+                name: req.body.interviewType,
             });
             const price = await stripe.prices.create({
                 product: product.id,
@@ -16,12 +16,13 @@ module.exports = {
                 currency: 'inr',
             });
             const formData = { ...req.body, priceId: price.id }
-            const insertedPlan = PlansModel.create(formData)
-            if (insertedPlan) {
+            const insertedPlan = await PlansModel.create(formData)
+            if (insertedPlan && insertedPlan._id) {
                 res.status(200).send({ message: 'Plan added successfully' })
+            } else {
+                res.status(500).send({ message: 'Something went wrong' })
             }
         } catch (err) {
-            console.log(err, 'errrr')
             if (err && err.code === 11000) {
                 res
                     .status(500)

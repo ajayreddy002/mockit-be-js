@@ -2,18 +2,22 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const { user } = require("../../models/users/user-model");
 const { resetPasswordMail, sendOtpToEmail } = require("../../services/email-service");
+const { InterviewModel } = require("../../models/interview/interview-model");
+const { getUserInfoByToken } = require("../../services/token.service");
 
 module.exports = {
   create: async (req, res) => {
     try {
-      if (req.body.userRole.toLowerCase() === 'admin') {
+      if (req.body.userRole && req.body.userRole.toLowerCase() === 'admin') {
         res
           .status(400)
           .send({ status: "Error", message: "Not allowed" });
       } else {
         const n = crypto.randomInt(0, 1000000);
         crypto.randomInt(0, 1000000, (err, n) => {
-          if (err) throw err;
+          if (err) res
+            .status(500)
+            .send({ status: "Error", message: "Something went wrong" });;
         });
         const verificationCode = n.toString().padStart(6, "0");
         const formData = { ...req.body, otp: verificationCode }
@@ -28,6 +32,10 @@ module.exports = {
         res
           .status(500)
           .send({ status: "Error", message: "User already registered." });
+      } else {
+        res
+          .status(500)
+          .send({ status: "Error", message: `${err} Something went wrong.` });
       }
     }
   },
@@ -35,10 +43,10 @@ module.exports = {
     try {
       const loggedInUser = await user.findOne(
         { email: req.body.email, password: req.body.password },
-        "name email phoneNumber userRole"
+        "name email phoneNumber userRole isEmailVerified"
       );
       const token = jwt.sign(
-        { user_id: loggedInUser._id, email: loggedInUser.email, role: loggedInUser.userRole },
+        { user_id: loggedInUser._id, email: loggedInUser.email, role: loggedInUser.userRole, isEmailVerified: loggedInUser.isEmailVerified },
         process.env.TOKEN_KEY,
         {
           expiresIn: "2h",
@@ -107,12 +115,51 @@ module.exports = {
   },
   changePassword: async (req, res) => {
     try {
+      const token = req.headers["x-access-token"] || req.headers["token"];
       const decoded = jwt.verify(token, process.env.TOKEN_KEY);
       await user.findByIdAndUpdate(decoded.user_id, { password: req.body.password });
       res
         .status(200)
         .send({ status: "Success", message: "Password updated successfully" });
     } catch (err) {
+      res
+        .status(500)
+        .send({ status: "Error", message: "User not found" });
+    }
+  },
+  getAllInterviewsByUserId: async (req, res) => {
+    try {
+      const token = req.headers["x-access-token"] || req.headers["token"];
+      const decoded = jwt.verify(token, process.env.TOKEN_KEY);
+      console.log(decoded)
+      const interviews = await InterviewModel.find({ userId: decoded.user_id })
+      res.send({ status: 'Success', res: interviews })
+    } catch (error) {
+      res
+        .status(500)
+        .send({ status: "Error", message: "User not found" });
+    }
+  },
+  getCountInfo: async (req, res) => {
+    try {
+      const userInfo = getUserInfoByToken(req.headers["x-access-token"] || req.headers["token"])
+      const countInfo = await InterviewModel.aggregate([
+        {
+          $match: {
+            userId: userInfo.user_id
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            newInterviews: { $sum: { $cond: [{ $eq: ["$status", "new"] }, 1, 0] } },
+            cancelledInterviews: { $sum: { $cond: [{ $eq: ["$status", "cancelled"] }, 1, 0] } },
+            completedInterviews: { $sum: { $cond: [{ $eq: ["$status", "completed"] }, 1, 0] } },
+          }
+        }
+      ])
+      res.status(200).send({ res: countInfo })
+    } catch (error) {
       res
         .status(500)
         .send({ status: "Error", message: "User not found" });
