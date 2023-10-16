@@ -1,5 +1,5 @@
 const { InterviewModel } = require('../../models/interview/interview-model');
-const { getAllInterviews } = require('../../services/interview-service');
+const { getAllInterviews, rescheduleInterview } = require('../../services/interview-service');
 require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 const DOMAIN = 'http://localhost:4200/success';
@@ -67,9 +67,35 @@ module.exports = {
   getPaymentSessionDetails: async (req, res) => {
     try {
       const session = await stripe.checkout.sessions.retrieve(req.query.session_id)
-      res.status(200).send({status: 'Success', data: session})
+      res.status(200).send({ status: 'Success', data: session })
     } catch (error) {
       res.status(500).send({ status: 'Error', message: 'Failed to get details' })
+    }
+  },
+  reschedule: async (req, res) => {
+    try {
+      const { date, startTime, endTime } = req.body;
+      const {interviewId} = req.params;
+      if (interviewId) {
+        const updateIRes = await rescheduleInterview(interviewId, date, startTime, endTime);
+        if (updateIRes) {
+          res.status(200).send({ status: 'Success', message: 'Rescheduled successfully' })
+        }
+      } else {
+        res
+          .status(400)
+          .send({ status: 'Error', message: 'Bad request' });
+      }
+    } catch (err) {
+      if(err){
+        res
+          .status(500)
+          .send({ status: 'Error', message: err });
+      } else {
+        res
+          .status(500)
+          .send({ status: 'Error', message: `Something went wrong.` });
+      }
     }
   }
 };

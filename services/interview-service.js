@@ -13,6 +13,24 @@ module.exports = {
         return await InterviewModel.findByIdAndUpdate(id, body);
     },
     rescheduleInterview: async (id, date, startTime, endTime) => {
-        return await InterviewModel.findByIdAndUpdate(id, { $set: { startTime, endTime, date } });
+        return new Promise(async (resolve, reject) => {
+            const existingInterviews = await InterviewModel.find(
+                {
+                    date,
+                    startTime,
+                    endTime
+                }
+            );
+            if (existingInterviews && existingInterviews.length > 0) {
+                reject('Slot not avialable');
+            } else {
+                const res = await InterviewModel.findByIdAndUpdate(id, { $set: { startTime, endTime, date } });
+                if(res && res._id){
+                    resolve(res);
+                } else {
+                    reject('Interview not found');
+                }
+            }
+        })
     },
 }

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const InterviewerProfile = mongoose.Schema({
-	interviewerId: {
-		type: Schema.Types.ObjectId,
+	userId: {
+		type: Schema.Types.ObjectId, $ref: 'users',
 		required: true
 	},
 	personalDetails: {
@@ -32,10 +32,9 @@ const InterviewerProfile = mongoose.Schema({
 	],
 	experience: [
 		{
-			jobTit: { type: String },
+			jobTitle: { type: String },
 			organization: { type: String },
-			yearsOfExpereince: { type: String },
-			jobSummary: { type: String },
+			duration: { type: String }
 		}
 	],
 	linkedInUrl: {

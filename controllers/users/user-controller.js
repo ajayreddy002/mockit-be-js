@@ -4,11 +4,13 @@ const { user } = require("../../models/users/user-model");
 const { resetPasswordMail, sendOtpToEmail } = require("../../services/email-service");
 const { InterviewModel } = require("../../models/interview/interview-model");
 const { getUserInfoByToken } = require("../../services/token.service");
+const { interviewerProfile } = require("../../models/interviewers/interviewer-model");
 
 module.exports = {
   create: async (req, res) => {
     try {
-      if (req.body.userRole && req.body.userRole.toLowerCase() === 'admin') {
+      const {body} = req;
+      if (body.userRole && body.userRole.toLowerCase() === 'admin') {
         res
           .status(400)
           .send({ status: "Error", message: "Not allowed" });
@@ -20,9 +22,25 @@ module.exports = {
             .send({ status: "Error", message: "Something went wrong" });;
         });
         const verificationCode = n.toString().padStart(6, "0");
-        const formData = { ...req.body, otp: verificationCode }
-        await user.create(formData);
-        await sendOtpToEmail(req.body.email, verificationCode)
+        const formData = { ...body, otp: verificationCode }
+        const newUser = new user(formData);
+        await newUser.save();
+        // Here adding dummy interviewer profile
+        if(body.userRole === 'interviewer') {
+          let interviewerDetails = new interviewerProfile({
+            personalDetails: {},
+            eduQualifications: [],
+            experience: [],
+            linkedInUrl: '',
+            profileType: '',
+            skills: [],
+            resume: ''
+          })
+          interviewerDetails.userId = newUser.id;
+          console.log(interviewerDetails)
+          interviewerDetails.save();
+        }
+        await sendOtpToEmail(body.email, verificationCode)
         res
           .status(200)
           .send({ status: "Success", message: "Successfully registered." });

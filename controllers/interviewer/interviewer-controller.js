@@ -6,31 +6,26 @@ module.exports = {
         try {
             const decoded = getUserInfoByToken(req.headers["x-access-token"] || req.headers["token"])
             console.log(decoded)
-            let interviewer = await interviewerProfile.findOne({ _id: decoded.user_id });
+            let interviewer = await interviewerProfile.findOne({ userId: decoded.user_id });
             console.log(interviewer)
             if (req.params.type === 'personalDetails') {
                 const { body } = req;
                 interviewer.personalDetails = { ...interviewer.personalDetails, ...body }
                 interviewer.upDt = new Date();
-                // interviewer.interviewerId = decoded.user_id;
             } 
             if (req.params.type === 'eduQualifications') {
                 const { body } = req;
                 console.log(body)
-                // const decoded = getUserInfoByToken(req.headers["x-access-token"] || req.headers["token"])
                 interviewer.eduQualifications = body
                 interviewer.upDt = new Date();
-                // interviewer.interviewerId = decoded.user_id;
             }
             if (req.params.type === 'experience') {
                 const { body } = req;
-                const decoded = getUserInfoByToken(req.headers["x-access-token"] || req.headers["token"])
-                interviewer.experience = body;
+                interviewer.experience = body.experience;
+                interviewer.skills = body.skills;
                 interviewer.upDt = new Date();
-                interviewer.interviewerId = decoded.user_id;
             }
-            console.log(interviewer)
-            await interviewer.update();
+            await interviewer.save();
             res.status(200).send({message: 'Details added successfully', res: interviewer})
         } catch (err) {
             res

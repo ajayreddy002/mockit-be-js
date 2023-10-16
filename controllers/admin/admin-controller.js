@@ -50,24 +50,5 @@ module.exports = {
                 .status(500)
                 .send({ status: 'Error', message: `${err} Something went wrong.` });
         }
-    },
-    reschedule: async (req, res) => {
-        try {
-            const { date, startTime, endTime } = req.body
-            if (req.params.id) {
-                const updateIRes = await rescheduleInterview(req.params.id, { date, startTime, endTime });
-                if (updateIRes) {
-                    res.status(200).send({ status: 'Success', message: 'Rescheduled successfully' })
-                }
-            } else {
-                res
-                    .status(400)
-                    .send({ status: 'Error', message: 'Bad request' });
-            }
-        } catch (err) {
-            res
-                .status(500)
-                .send({ status: 'Error', message: `${err} Something went wrong.` });
-        }
     }
 }
